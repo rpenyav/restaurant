@@ -1,5 +1,4 @@
 {
-  // "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
     "paths": {
@@ -13,6 +12,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "context/**/*.ts" 
-  ]
+    "context/**/*.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }

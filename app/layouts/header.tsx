@@ -1,10 +1,15 @@
 import React from "react";
 import { View, Image, Pressable, StyleSheet } from "react-native";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import {
+  DrawerActions,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; // Asegúrate de tener instalado @expo/vector-icons
 
 const Header = () => {
   const navigation = useNavigation();
+  const route = useRoute();
 
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.openDrawer());
@@ -12,9 +17,11 @@ const Header = () => {
 
   return (
     <View style={styles.header}>
-      <Pressable onPress={openDrawer} style={styles.button}>
-        <Ionicons name="menu" size={24} color="#22577a" />
-      </Pressable>
+      {route.name !== "OrderDetails" && (
+        <Pressable onPress={openDrawer} style={styles.button}>
+          <Ionicons name="menu" size={24} color="#22577a" />
+        </Pressable>
+      )}
       <View style={styles.brandContainer}>
         <Image
           source={require("@/assets/images/logomini.png")}

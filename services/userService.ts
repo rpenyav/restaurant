@@ -1,11 +1,13 @@
+import axiosInstance from "@/helpers/axiosHelper";
 import { User } from "@/interfaces/user";
-import axios from "axios";
 
 export const getUserData = async (email: string): Promise<User> => {
+  if (!email) {
+    throw new Error("Email is undefined");
+  }
+
   try {
-    const response = await axios.get(
-      `https://backend-tester-741806943268.herokuapp.com/testsuite/users/${email}`
-    );
+    const response = await axiosInstance.get(`/users/email/${email}`);
     return response.data;
   } catch (error) {
     throw new Error("Failed to fetch user data");

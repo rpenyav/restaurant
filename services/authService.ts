@@ -1,16 +1,17 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Importación según documentación
+import { jwtDecode } from "jwt-decode";
+import API_URL from "@/config/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "token";
-const USERNAME_KEY = "username";
+const EMAIL_KEY = "email";
 
 interface LoginResponse {
   access_token: string;
 }
 
 interface DecodedToken {
-  username: string;
+  email: string;
 }
 
 export const saveToken = async (token: string): Promise<void> => {
@@ -39,21 +40,29 @@ export const removeToken = async (): Promise<void> => {
   }
 };
 
-export const saveUsername = async (username: string): Promise<void> => {
+export const saveEmail = async (email: string): Promise<void> => {
   try {
-    await AsyncStorage.setItem(USERNAME_KEY, username);
+    await AsyncStorage.setItem(EMAIL_KEY, email);
   } catch (error) {
-    console.error("Error saving username:", error);
+    console.error("Error saving email:", error);
   }
 };
 
-export const getUsername = async (): Promise<string | null> => {
+export const getEmail = async (): Promise<string | null> => {
   try {
-    const username = await AsyncStorage.getItem(USERNAME_KEY);
-    return username;
+    const email = await AsyncStorage.getItem(EMAIL_KEY);
+    return email ? email : null;
   } catch (error) {
-    console.error("Error getting username:", error);
+    console.error("Error getting email:", error);
     return null;
+  }
+};
+
+export const removeEmail = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(EMAIL_KEY);
+  } catch (error) {
+    console.error("Error removing email:", error);
   }
 };
 
@@ -62,33 +71,21 @@ export const login = async (
   password: string
 ): Promise<string | null> => {
   try {
-    const response = await axios.post<LoginResponse>(
-      "https://backend-tester-741806943268.herokuapp.com/auth/login",
-      {
-        email,
-        password,
-      }
-    );
+    const response = await axios.post<LoginResponse>(`${API_URL}/auth/login`, {
+      email,
+      password,
+    });
     const { access_token } = response.data;
-    console.log("Access Token:", access_token); // Log para verificar el token
+
     await saveToken(access_token);
 
-    // Decodificar el token JWT para obtener el username
-    const decoded: DecodedToken = jwtDecode(access_token);
-    console.log("Decoded Token:", decoded); // Log para verificar el contenido del token
-    await saveUsername(decoded.username); // Guardar username en AsyncStorage
-    return decoded.username; // Retornar sólo el username
+    const decoded: DecodedToken = jwtDecode<DecodedToken>(access_token);
+
+    await saveEmail(decoded.email);
+    return decoded.email;
   } catch (error) {
     console.error("Error logging in:", error);
     return null;
-  }
-};
-
-export const removeUsername = async (): Promise<void> => {
-  try {
-    await AsyncStorage.removeItem(USERNAME_KEY);
-  } catch (error) {
-    console.error("Error removing username:", error);
   }
 };
 
@@ -97,13 +94,7 @@ export const register = async (
   password: string
 ): Promise<void> => {
   try {
-    await axios.post(
-      "https://backend-tester-741806943268.herokuapp.com/auth/register",
-      {
-        email,
-        password,
-      }
-    );
+    await axios.post(`${API_URL}/auth/register`, { email, password });
   } catch (error) {
     console.error("Error registering:", error);
     throw error;

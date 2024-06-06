@@ -13,3 +13,11 @@ export interface User {
   startDate: null;
   isActive: number;
 }
+
+export enum UserRole {
+  Doctor = "doctor",
+  Guest = "guest",
+  Admin = "admin",
+  Bartender = "bartender",
+  Cheff = "cheff",
+}

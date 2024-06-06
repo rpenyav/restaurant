@@ -21,17 +21,16 @@ import { useUser } from "@/context/UserContext";
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Estado para el spinner
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { fetchUserData } = useUser();
 
   const handleLogin = async () => {
-    setLoading(true); // Iniciar el spinner
+    setLoading(true);
     try {
       const userEmail = await login(email, password);
-      if (userEmail) {
-        console.log("User email obtained:", userEmail); // Añadir log
 
+      if (userEmail) {
         await fetchUserData(userEmail);
         router.replace("/authenticated/home");
       } else {
@@ -40,7 +39,7 @@ const LoginScreen: React.FC = () => {
     } catch (error) {
       Alert.alert("Error", "Login failed");
     } finally {
-      setLoading(false); // Detener el spinner
+      setLoading(false);
     }
   };
 
@@ -106,13 +105,13 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center", // Centra el contenido horizontalmente
+    alignItems: "center",
   },
   logo: {
-    width: 200, // Ajusta el tamaño de la imagen según sea necesario
+    width: 200,
     height: 100,
     marginBottom: 66,
-    resizeMode: "contain", // Asegura que la imagen se ajuste correctamente
+    resizeMode: "contain",
   },
   input: {
     borderWidth: 1,
@@ -121,14 +120,14 @@ const styles = StyleSheet.create({
     padding: 18,
     marginVertical: 8,
     backgroundColor: "#ffffff",
-    width: "100%", // Asegura que los inputs ocupen todo el ancho disponible
+    width: "100%",
   },
   button: {
     backgroundColor: "#22577a",
     padding: 16,
     marginVertical: 8,
     borderRadius: 50,
-    width: "100%", // Asegura que los botones ocupen todo el ancho disponible
+    width: "100%",
   },
   buttonText: {
     color: "#fff",

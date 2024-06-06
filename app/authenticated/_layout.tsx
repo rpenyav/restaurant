@@ -1,33 +1,22 @@
-import { removeToken, removeUsername } from "@/services/authService";
+import { removeToken, removeEmail } from "@/helpers/storageHelper";
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import {
-  DrawerNavigationHelpers,
-  DrawerDescriptorMap,
-} from "@react-navigation/drawer/lib/typescript/src/types";
-import { DrawerNavigationState, ParamListBase } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
-import { JSX, ReactNode, RefAttributes } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-  ScrollViewProps,
-} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StyleSheet } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import OrderDetailsScreen from "./orders/[id]";
 
 const CustomDrawerContent = (props: any) => {
   const router = useRouter();
 
   const handleLogout = async () => {
     await removeToken();
-    await removeUsername();
+    await removeEmail();
     router.replace("/auth/login");
   };
 
@@ -44,29 +33,38 @@ const CustomDrawerContent = (props: any) => {
   );
 };
 
-export default function _layout() {
+const Stack = createStackNavigator();
+
+const DrawerNavigator = () => (
+  <Drawer
+    screenOptions={{
+      headerShown: false, // Ocultar el header
+      drawerStyle: { paddingTop: 55 },
+    }}
+    drawerContent={(props) => <CustomDrawerContent {...props} />}
+  >
+    <Drawer.Screen
+      name="Home"
+      options={{
+        drawerLabel: "Home",
+      }}
+    />
+    <Drawer.Screen
+      name="Profile"
+      options={{
+        drawerLabel: "Profile",
+      }}
+    />
+  </Drawer>
+);
+
+export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
-        screenOptions={{
-          headerShown: false,
-          drawerStyle: { paddingTop: 55 },
-        }}
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-      >
-        <Drawer.Screen
-          name="home" // This is the name of the page and must match the url from root
-          options={{
-            drawerLabel: "Home",
-          }}
-        />
-        <Drawer.Screen
-          name="profile" // This is the name of the page and must match the url from root
-          options={{
-            drawerLabel: "Profile",
-          }}
-        />
-      </Drawer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Drawer" component={DrawerNavigator} />
+        <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} />
+      </Stack.Navigator>
     </GestureHandlerRootView>
   );
 }
@@ -74,13 +72,6 @@ export default function _layout() {
 const styles = StyleSheet.create({
   drawerContainer: {
     flex: 1,
-    // Ajuste el margen superior del contenedor del drawer aquí
-  },
-  drawerContent: {
-    flex: 1,
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
   },
   logoutButton: {
     backgroundColor: "#007BFF",

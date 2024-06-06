@@ -6,13 +6,13 @@ import React, {
   ReactNode,
 } from "react";
 import { getUserData } from "@/services/userService";
-import { getUsername } from "@/services/authService"; // Importar función para obtener el username
+import { getEmail } from "@/services/authService";
 import { User } from "@/interfaces/user";
 
 interface UserContextProps {
   user: User | null;
   setUser: (user: User) => void;
-  fetchUserData: (username: string) => Promise<void>;
+  fetchUserData: (email: string) => Promise<void>;
 }
 
 interface UserProviderProps {
@@ -24,12 +24,19 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  const fetchUserData = async (email: string) => {
+    if (email !== "undefined") {
+      const userData = await getUserData(email);
+      setUser(userData);
+    }
+  };
+
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        const username = await getUsername();
-        if (username) {
-          await fetchUserData(username);
+        const email = await getEmail();
+        if (email) {
+          await fetchUserData(email);
         }
       } catch (error) {
         console.error("Failed to load user data:", error);
@@ -37,15 +44,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     };
     loadUserData();
   }, []);
-
-  const fetchUserData = async (username: string) => {
-    try {
-      const userData = await getUserData(username);
-      setUser(userData);
-    } catch (error) {
-      console.error("Failed to fetch user data:", error);
-    }
-  };
 
   return (
     <UserContext.Provider value={{ user, setUser, fetchUserData }}>
