@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, Pressable, Alert } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Pressable,
+  Alert,
+  ScrollView,
+} from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Header from "@/app/layouts/header";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,12 +31,13 @@ const OrderDetailsScreen: React.FC = () => {
   const [order, setOrder] = useState<{ [key: string]: number }>({});
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories(data.categories);
+        setCategories(data.data);
       } catch (error) {
         Alert.alert("Error", "Failed to load categories");
       } finally {
@@ -42,6 +50,14 @@ const OrderDetailsScreen: React.FC = () => {
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({
+          y: 300, // Ajusta esta cantidad según sea necesario para desplazar hacia la sección deseada
+          animated: true,
+        });
+      }
+    }, 100);
   };
 
   const handleItemSelect = (item: string) => {
@@ -73,49 +89,46 @@ const OrderDetailsScreen: React.FC = () => {
   return (
     <Provider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={globalStyles.container}>
-          <Header />
-          <View style={globalStyles.breadcrumbs}>
-            <Pressable
-              style={globalStyles.breadcrumbButton}
-              onPress={() => router.back()}
-            >
-              <Ionicons name="arrow-back" size={24} color="black" />
-              <Text style={globalStyles.breadcrumbText}>Back to Tables</Text>
-            </Pressable>
-          </View>
-          <View style={globalStyles.content}>
-            <Text style={globalStyles.title}>
-              Order for Table {id} in {sector}
-            </Text>
-            <Text style={globalStyles.label}>Select a Category</Text>
-            <CategoryList
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onSelectCategory={handleCategorySelect}
-            />
-            {selectedCategory && (
-              <>
-                <Text style={globalStyles.label}>
-                  Select Items from {selectedCategory}
-                </Text>
-                <ItemList
-                  items={
-                    categories.find(
-                      (cat) => cat.nameCategoria === selectedCategory
-                    )?.items || []
-                  }
+        <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
+          <View style={globalStyles.container}>
+            <Header />
+
+            <View style={globalStyles.content}>
+              <Text style={globalStyles.titlemini}>
+                Order for Table {id} in {sector}
+              </Text>
+
+              <CategoryList
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleCategorySelect}
+              />
+              {selectedCategory && (
+                <>
+                  <Text style={globalStyles.label}>
+                    Select platos de {selectedCategory}
+                  </Text>
+                  <ItemList
+                    items={
+                      categories.find(
+                        (cat) => cat.nameCategoria === selectedCategory
+                      )?.items || []
+                    }
+                    order={order}
+                    onSelectItem={handleItemSelect}
+                    onDeselectItem={handleItemDeselect}
+                  />
+                </>
+              )}
+              {Object.keys(order).length > 0 && (
+                <OrderSummary
                   order={order}
-                  onSelectItem={handleItemSelect}
-                  onDeselectItem={handleItemDeselect}
+                  onConfirmOrder={handleConfirmOrder}
                 />
-              </>
-            )}
-            {Object.keys(order).length > 0 && (
-              <OrderSummary order={order} onConfirmOrder={handleConfirmOrder} />
-            )}
+              )}
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </GestureHandlerRootView>
     </Provider>
   );

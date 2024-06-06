@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Pressable, StyleSheet } from "react-native";
+import { View, Image, Pressable, StyleSheet, Text } from "react-native";
 import {
   DrawerActions,
   useNavigation,
@@ -15,9 +15,17 @@ const Header = () => {
     navigation.dispatch(DrawerActions.openDrawer());
   };
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.header}>
-      {route.name !== "OrderDetails" && (
+      {route.name === "OrderDetails" ? (
+        <Pressable onPress={goBack} style={styles.button}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </Pressable>
+      ) : (
         <Pressable onPress={openDrawer} style={styles.button}>
           <Ionicons name="menu" size={24} color="#22577a" />
         </Pressable>
@@ -61,6 +69,12 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row", // Para alinear el ícono y el texto en línea
+  },
+  breadcrumbText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "black",
   },
   brandContainer: {
     flex: 1,

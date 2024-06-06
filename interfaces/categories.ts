@@ -14,9 +14,10 @@ export interface Category {
   nameCategoria: string;
   activo: boolean;
   items: MenuItem[];
+  imagen: string;
 }
 export interface PaginatedResponse {
-  categories: Category[];
+  data: Category[];
   totalElements: number;
   totalPages: number;
   isLast: boolean;

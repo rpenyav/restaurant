@@ -1,6 +1,5 @@
-// components/CategoryList.tsx
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Image, Pressable, Text } from "react-native";
 import globalStyles from "@/styles/globalStyles";
 import { Category } from "@/interfaces/categories";
 
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const CategoryList: React.FC<Props> = ({
-  categories,
+  categories = [],
   selectedCategory,
   onSelectCategory,
 }) => {
@@ -27,6 +26,10 @@ const CategoryList: React.FC<Props> = ({
           ]}
           onPress={() => onSelectCategory(category.nameCategoria)}
         >
+          <Image
+            source={{ uri: category.imagen }}
+            style={globalStyles.categoryImage}
+          />
           <Text style={globalStyles.categoryButtonText}>
             {category.nameCategoria}
           </Text>

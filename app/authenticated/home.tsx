@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
+  Dimensions,
 } from "react-native";
 import { useUser } from "@/context/UserContext";
 import globalStyles from "@/styles/globalStyles";
@@ -90,6 +91,10 @@ const HomeScreen: React.FC = () => {
     );
   }
 
+  // Determine the number of columns based on screen width
+  const screenWidth = Dimensions.get("window").width;
+  const numColumns = Math.min(Math.max(Math.floor(screenWidth / 180), 2), 4);
+
   return (
     <View style={globalStyles.container}>
       <Header />
@@ -125,6 +130,9 @@ const HomeScreen: React.FC = () => {
                 <Text style={globalStyles.buttonText}>{item.tablename}</Text>
               </TouchableOpacity>
             )}
+            numColumns={numColumns}
+            key={numColumns} // Change key to force re-render when numColumns changes
+            columnWrapperStyle={styles.columnWrapper}
           />
         </>
       )}
@@ -154,6 +162,11 @@ const styles = StyleSheet.create({
   tableButton: {
     ...globalStyles.button,
     margin: 5,
+    flex: 1,
+    maxWidth: "25%", // Ensure a max width of 25% for 4 columns
+  },
+  columnWrapper: {
+    justifyContent: "flex-start",
   },
 });
 

@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "#c7f9cc",
   },
   text: {
@@ -24,13 +23,18 @@ const globalStyles = StyleSheet.create({
     marginBottom: 16,
     textAlign: "center",
   },
+  titlemini: {
+    fontSize: 14,
+    marginBottom: 8,
+    textAlign: "center",
+  },
   label: {
     fontSize: 18,
     marginBottom: 8,
   },
   content: {
     flex: 1,
-    justifyContent: "center",
+
     padding: 16,
   },
   breadcrumbs: {
@@ -112,6 +116,11 @@ const globalStyles = StyleSheet.create({
   },
   selectedButton: {
     backgroundColor: "red",
+  },
+  categoryImage: {
+    width: 100, // Ajusta según sea necesario
+    height: 100, // Ajusta según sea necesario
+    borderRadius: 5,
   },
 });
 
