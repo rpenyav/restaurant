@@ -30,7 +30,7 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     const fetchSectors = async () => {
       try {
-        const response: PaginatedResponse = await getSectors(1, 10);
+        const response: PaginatedResponse<Sector> = await getSectors(1, 10);
         setSectors(response.sectors);
       } catch (error) {
         console.error("Failed to fetch sectors:", error);
@@ -46,11 +46,12 @@ const HomeScreen: React.FC = () => {
     setSelectedSector(sector);
   };
 
-  const handleTableSelect = (table: string) => {
+  const handleTableSelect = (table: { tablename: string; _id: string }) => {
     if (selectedSector) {
       navigation.navigate("OrderDetails", {
         sector: selectedSector.sectorname,
-        table,
+        table: table.tablename,
+        tableId: table._id,
       });
     }
   };
@@ -119,7 +120,7 @@ const HomeScreen: React.FC = () => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.tableButton}
-                onPress={() => handleTableSelect(item.tablename)}
+                onPress={() => handleTableSelect(item)}
               >
                 <Text style={globalStyles.buttonText}>{item.tablename}</Text>
               </TouchableOpacity>

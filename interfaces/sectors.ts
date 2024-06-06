@@ -9,8 +9,8 @@ export interface Sector {
   sectortables: Table[];
 }
 
-export interface PaginatedResponse {
-  sectors: Sector[];
+export interface PaginatedResponse<T> {
+  sectors: T[];
   pageNumber: number;
   pageSize: number;
   totalElements: number;

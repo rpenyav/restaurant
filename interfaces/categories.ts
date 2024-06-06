@@ -1,14 +1,23 @@
-export type Category =
-  | "Entrantes"
-  | "Tapas"
-  | "Pasta"
-  | "Cocina Mediterránea"
-  | "Carnes"
-  | "Pescados"
-  | "Postres"
-  | "Bebidas"
-  | "Extras";
+// interfaces/categories.ts
+export interface MenuItem {
+  _id: string;
+  namePlato: string;
+  stock: number;
+  disponible: boolean;
+  precioUnidad: number;
+  ingredientes: string;
+  aptoCeliacos: boolean;
+}
 
-export interface MenuItems {
-  [key: string]: string[];
+export interface Category {
+  _id: string;
+  nameCategoria: string;
+  activo: boolean;
+  items: MenuItem[];
+}
+export interface PaginatedResponse {
+  categories: Category[];
+  totalElements: number;
+  totalPages: number;
+  isLast: boolean;
 }
