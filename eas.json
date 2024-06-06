@@ -7,27 +7,18 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "image": "ubuntu-20.04-jdk-8-ndk-r21e"
-      },
-      "ios": {
-        "image": "macos-12-xcode-14.1"
+        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "image": "ubuntu-20.04-jdk-8-ndk-r21e"
-      },
-      "ios": {
-        "image": "macos-12-xcode-14.1"
+        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
       }
     },
     "production": {
       "android": {
-        "image": "ubuntu-20.04-jdk-8-ndk-r21e"
-      },
-      "ios": {
-        "image": "macos-12-xcode-14.1"
+        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
       }
     }
   },
