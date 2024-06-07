@@ -53,7 +53,7 @@ const OrderDetailsScreen: React.FC = () => {
     setTimeout(() => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
-          y: 300, // Ajusta esta cantidad según sea necesario para desplazar hacia la sección deseada
+          y: 500, // Ajusta esta cantidad según sea necesario para desplazar hacia la sección deseada
           animated: true,
         });
       }
@@ -103,29 +103,31 @@ const OrderDetailsScreen: React.FC = () => {
                 selectedCategory={selectedCategory}
                 onSelectCategory={handleCategorySelect}
               />
-              {selectedCategory && (
-                <>
-                  <Text style={globalStyles.label}>
-                    Select platos de {selectedCategory}
-                  </Text>
-                  <ItemList
-                    items={
-                      categories.find(
-                        (cat) => cat.nameCategoria === selectedCategory
-                      )?.items || []
-                    }
+              <View style={globalStyles.minimheight}>
+                {selectedCategory && (
+                  <>
+                    <Text style={globalStyles.label}>
+                      Select platos de {selectedCategory}
+                    </Text>
+                    <ItemList
+                      items={
+                        categories.find(
+                          (cat) => cat.nameCategoria === selectedCategory
+                        )?.items || []
+                      }
+                      order={order}
+                      onSelectItem={handleItemSelect}
+                      onDeselectItem={handleItemDeselect}
+                    />
+                  </>
+                )}
+                {Object.keys(order).length > 0 && (
+                  <OrderSummary
                     order={order}
-                    onSelectItem={handleItemSelect}
-                    onDeselectItem={handleItemDeselect}
+                    onConfirmOrder={handleConfirmOrder}
                   />
-                </>
-              )}
-              {Object.keys(order).length > 0 && (
-                <OrderSummary
-                  order={order}
-                  onConfirmOrder={handleConfirmOrder}
-                />
-              )}
+                )}
+              </View>
             </View>
           </View>
         </ScrollView>

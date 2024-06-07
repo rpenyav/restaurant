@@ -122,6 +122,9 @@ const globalStyles = StyleSheet.create({
     height: 100, // Ajusta según sea necesario
     borderRadius: 5,
   },
+  minimheight: {
+    minHeight: 920,
+  },
 });
 
 export default globalStyles;
